@@ -14,6 +14,7 @@ export function loop(): void {
     if (enemySpawn) {
       attacker.moveTo(enemySpawn);
       attacker.attack(enemySpawn);
+      console.log(attacker.id, "attacking", enemySpawn.id);
     }
   }
 }
