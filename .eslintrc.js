@@ -54,6 +54,7 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": ["error", { functions: false }],
     "@typescript-eslint/prefer-for-of": "error",
     "@typescript-eslint/unified-signatures": "error",
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     camelcase: "error",
     "@typescript-eslint/dot-notation": "error",
     eqeqeq: ["error", "smart"],

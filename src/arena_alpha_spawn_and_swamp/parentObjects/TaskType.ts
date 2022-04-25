@@ -1,7 +1,7 @@
 import { RoomPosition } from "game/prototypes";
-import { Worker } from "./Worker";
+import { Worker } from "./WorkerType";
 
-export interface Task {
+export type Task = {
   name: string; // name of task
   status: string; // {ENQUEUED, RUNNING,HALTING,COMPLETED}
   taskLocation: RoomPosition; // needs to be set on a per task basis (i.e where the creep is desired, null for location agnostic)
@@ -24,4 +24,4 @@ export interface Task {
 
   // interrupt?(taskOwner: AnyCreep | AnyStructure):       void;               //handler to interrupt, check if exists with if(task.interrupt){task.interrupt();}else{what happens if something can't be interrupt}
   // run(taskOwner: AnyCreep | AnyStructure):   void;
-}
+};

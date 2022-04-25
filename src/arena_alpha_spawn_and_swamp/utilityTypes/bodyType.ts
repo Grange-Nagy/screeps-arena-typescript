@@ -12,45 +12,61 @@ const BODYPART_COST: Record<BodyPartConstant, number> = {
   claim: 600
 };
 
-export class BodyType {
-  public readonly partRecord: Record<BodyPartConstant, number> = {
-    move: 0,
-    work: 0,
-    carry: 0,
-    attack: 0,
-    // eslint-disable-next-line camelcase
-    ranged_attack: 0,
-    tough: 0,
-    heal: 0,
-    claim: 0
-  };
-  public readonly spawnArray: BodyPartConstant[] = [];
-  public readonly cost = 0;
-  public readonly burdenedSpeed: number;
-  public readonly unburdenedSpeed: number;
-
-  public constructor(bodyRecord: Record<BodyPartConstant, number>) {
-    this.partRecord = bodyRecord;
-    let partSum = 0;
-    for (const part in bodyRecord) {
-      const partReal = part as BodyPartConstant;
-      const count = bodyRecord[partReal];
-      this.cost += BODYPART_COST[partReal] * count;
+export function makeBody(partialBodyRecord: Partial<Record<BodyPartConstant, number>>) {
+  let partSum = 0;
+  const partStrArray: BodyPartConstant[] = [];
+  const bt = {} as Body;
+  bt.move = 0;
+  bt.work = 0;
+  bt.carry = 0;
+  bt.attack = 0;
+  // eslint-disable-next-line camelcase
+  bt.ranged_attack = 0;
+  bt.tough = 0;
+  bt.heal = 0;
+  bt.claim = 0;
+  bt.cost = 0;
+  for (const part in partialBodyRecord) {
+    const partReal = part as BodyPartConstant;
+    const count = partialBodyRecord[partReal];
+    if (count !== undefined) {
+      bt[partReal] = count;
+      bt.cost += BODYPART_COST[partReal] * count;
       partSum += count;
       for (let i = 0; i < count; i++) {
-        this.spawnArray.push(partReal);
+        partStrArray.push(partReal);
       }
     }
-
-    partSum -= this.partRecord.move;
-    this.burdenedSpeed = 1 / Math.ceil(partSum / this.partRecord.move);
-
-    partSum -= this.partRecord.carry;
-
-    if (partSum === 0) {
-      this.unburdenedSpeed = 1;
-    } else {
-      this.unburdenedSpeed = 1 / Math.ceil(partSum / this.partRecord.move);
-    }
   }
+
+  partSum -= bt.move;
+  bt.burdenedSpeed = 1 / Math.ceil(partSum / bt.move);
+
+  partSum -= bt.carry;
+
+  if (partSum === 0) {
+    bt.unburdenedSpeed = 1;
+  } else {
+    bt.unburdenedSpeed = 1 / Math.ceil(partSum / bt.move);
+  }
+  bt.spawnArray = partStrArray;
+  return bt as Readonly<Body>;
 }
+
+export type Body = {
+  move: number;
+  work: number;
+  carry: number;
+  attack: number;
+  // eslint-disable-next-line camelcase
+  ranged_attack: number;
+  tough: number;
+  heal: number;
+  claim: number;
+
+  spawnArray: BodyPartConstant[];
+  cost: number;
+
+  burdenedSpeed: number;
+  unburdenedSpeed: number;
+};
